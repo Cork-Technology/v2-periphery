@@ -52,11 +52,21 @@ export async function v2Fixture(provider: Web3Provider, [wallet]: Wallet[]): Pro
   await factoryV1.initializeFactory((await deployContract(wallet, UniswapV1Exchange, [])).address)
 
   // deploy V2
-  const factoryV2 = await deployContract(wallet, UniswapV2Factory, [wallet.address])
+  const factoryV2 = await deployContract(wallet, UniswapV2Factory, [wallet.address, swapContract])
 
   // deploy routers
-  const router01 = await deployContract(wallet, UniswapV2Router01, [factoryV2.address, WETH.address, swapContract], overrides)
-  const router02 = await deployContract(wallet, UniswapV2Router02, [factoryV2.address, WETH.address, swapContract], overrides)
+  const router01 = await deployContract(
+    wallet,
+    UniswapV2Router01,
+    [factoryV2.address, WETH.address, swapContract],
+    overrides
+  )
+  const router02 = await deployContract(
+    wallet,
+    UniswapV2Router02,
+    [factoryV2.address, WETH.address, swapContract],
+    overrides
+  )
 
   // event emitter for testing
   const routerEventEmitter = await deployContract(wallet, RouterEventEmitter, [])
